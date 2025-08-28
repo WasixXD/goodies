@@ -250,6 +250,19 @@ Matrix *saul_matrix_mul(Matrix *m1, Matrix *m2) {
     return m3;
 }
 
+Matrix *saul_matrix_transpose(Matrix *m) {
+    Matrix *new = saul_new_matrix(m->cols, m->rows);
+
+    for(int i = 0; i < m->rows; i++) {
+        for(int j = 0; j < m->cols; j++) {
+            float value = saul_get_value_by_index(m, i, j);
+            saul_matrix_set_value(new, j, i, value);
+        }
+    }
+
+    m = new;
+}
+
 void saul_print_matrix(Matrix *m) {
     int col_width[m->cols];
 
