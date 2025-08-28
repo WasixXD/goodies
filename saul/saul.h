@@ -250,17 +250,60 @@ Matrix *saul_matrix_mul(Matrix *m1, Matrix *m2) {
     return m3;
 }
 
-Matrix *saul_matrix_transpose(Matrix *m) {
-    Matrix *new = saul_new_matrix(m->cols, m->rows);
+void saul_matrix_transpose(Matrix **m) {
+    Matrix *actual = *m;
+    Matrix *new = saul_new_matrix(actual->cols, actual->rows);
 
-    for(int i = 0; i < m->rows; i++) {
-        for(int j = 0; j < m->cols; j++) {
-            float value = saul_get_value_by_index(m, i, j);
+    for(int i = 0; i < actual->rows; i++) {
+        for(int j = 0; j < actual->cols; j++) {
+            float value = saul_get_value_by_index(actual, i, j);
             saul_matrix_set_value(new, j, i, value);
         }
     }
 
-    m = new;
+    *m = new;
+}
+
+int saul_is_upper_triangular(Matrix *m) {
+    int i = 0;
+    int j = 0;
+    while(i != m->rows && j != m->cols) {
+        for(int k = i + 1; k < m->rows; k++) {
+            float value = saul_get_value_by_index(m, k, j);
+            if (value != 0) return -1;
+        }
+        ++i;
+        ++j;
+    }
+    return 0;
+}
+
+int saul_gauss_reduction(Matrix **_m) {
+
+    int i = 0;
+    int j = 0;
+    Matrix *m = *_m;
+
+    while(saul_is_upper_triangular(m) != 0) {
+        float pivot = saul_get_value_by_index(m, i, j);
+
+        for(int k = i + 1; k < m->rows; k++) {
+            float pivotBelow = saul_get_value_by_index(m, k, j);
+            for(int l = 0; l < m->cols; l++) {
+                float a = saul_get_value_by_index(m, i, l);
+                float b = saul_get_value_by_index(m, k, l);
+
+                float mul = -pivotBelow / pivot;
+                float value = mul * a + b;
+                saul_matrix_set_value(m, k, l, value);
+            }
+        }
+        ++i;
+        ++j;
+    }
+
+    return 0;
+
 }
 
 void saul_print_matrix(Matrix *m) {
