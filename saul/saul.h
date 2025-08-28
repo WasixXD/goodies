@@ -122,11 +122,14 @@ float saul_get_value_by_index(Matrix *m, int i, int j);
 void saul_matrix_for_each(Matrix *m, saul_call_back cb);
 int saul_matrix_for_each_double(Matrix *m1, Matrix *m2, saul_call_back_double_matrix cb);
 int saul_check_boundaries(Matrix *m, int i, int j);
+int saul_is_upper_triangular(Matrix *m);
 
 // -- Operations
 int saul_matrix_add(Matrix *m1, Matrix *m2);
 int saul_matrix_sub(Matrix *m1, Matrix *m2);
-Matrix *saul_matrix_mul(Matrix *m1, Matrix *m2);
+saul_matrix_mul(Matrix *m1, Matrix *m2);
+int saul_gauss_reduction(Matrix **_m);
+void saul_matrix_transpose(Matrix **m);
 
 int saul_check_boundaries(Matrix *m, int i, int j) {
     if(m->cols <= j || i < 0 ) return -1;
@@ -278,6 +281,7 @@ int saul_is_upper_triangular(Matrix *m) {
     return 0;
 }
 
+// TODO: SOMETIMES IS IMPOSSIBLE TO SOLVE
 int saul_gauss_reduction(Matrix **_m) {
 
     int i = 0;
