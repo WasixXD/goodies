@@ -127,7 +127,7 @@ int saul_is_upper_triangular(Matrix *m);
 // -- Operations
 int saul_matrix_add(Matrix *m1, Matrix *m2);
 int saul_matrix_sub(Matrix *m1, Matrix *m2);
-saul_matrix_mul(Matrix *m1, Matrix *m2);
+Matrix *saul_matrix_mul(Matrix *m1, Matrix *m2);
 int saul_gauss_reduction(Matrix **_m);
 void saul_matrix_transpose(Matrix **m);
 
