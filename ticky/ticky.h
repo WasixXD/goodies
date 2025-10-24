@@ -1,61 +1,73 @@
-/*****************************************************************************
- * TICKY - Single-Header Benchmarking Library
+/******************************************************************************
+ * TICKY - Lightweight Benchmarking Library for C
  * 
- * A lightweight, STB-style header-only benchmarking utility for C programs.
- * Measures function execution time and calculates iterations per second.
- *
- * USAGE:
- *   Define TICKY_IMPLEMENTATION in exactly ONE C file before including:
- *   
- *   #define TICKY_IMPLEMENTATION
- *   #include "ticky.h"
- *
- * BASIC EXAMPLE:
- *   void my_function() {
- *       // code to benchmark
- *   }
- *
- *   int main() {
- *       ticky_stats *stats = ticky_new_stats();
- *       ticky_bench(stats, "My Function", my_function, NULL);
- *       ticky_plot(stats);
- *       return 0;
- *   }
- *
- * FEATURES:
- *   - Automatic iteration counting (runs for ~2.5 seconds)
- *   - Average execution time calculation
- *   - Iterations per second measurement
- *   - Compiler detection and optimization flag reporting
- *   - Simple API with minimal overhead
- *
  * FUNCTIONS:
- *   ticky_stats* ticky_new_stats()
- *       Creates a new statistics collection for benchmark results
- *
- *   void ticky_bench(ticky_stats *s, char *message, func fn, ticky_opts *opts)
- *       Benchmarks a function and stores results
+ * 
+ * ticky_stats* ticky_new_stats()
+ *     Creates a new statistics collection to store benchmark results.
+ *     Must be called before running any benchmarks.
+ *     Returns a pointer to the stats object.
+ * 
+ * void ticky_bench(ticky_stats *s, char *message, func fn, ticky_opts *opts)
+ *     Benchmarks a function by running it repeatedly for ~2.5 seconds.
+ *     Automatically counts iterations and calculates performance metrics.
+ *     Parameters:
  *       - s: stats object to store results
- *       - message: description of the benchmark
- *       - fn: function pointer to benchmark (must be void (*func)())
+ *       - message: description of what's being benchmarked
+ *       - fn: function pointer to benchmark (void function with no parameters)
  *       - opts: reserved for future use (pass NULL)
- *
- *   void ticky_plot(ticky_stats *s)
- *       Prints all benchmark results and frees memory
- *
+ *     Records average execution time and iterations per second.
+ * 
+ * void ticky_plot(ticky_stats *s)
+ *     Prints all benchmark results and frees memory.
+ *     Displays compiler information, optimization status, and performance data
+ *     for each benchmarked function. Automatically cleans up allocated memory.
+ * 
+ * USAGE:
+ * In one C file:
+ *     #define TICKY_IMPLEMENTATION
+ *     #include "ticky.h"
+ * 
+ * In other files:
+ *     #include "ticky.h"
+ * 
+ * EXAMPLES:
+ *     void sort_array() {
+ *         // sorting code here
+ *     }
+ *     
+ *     void hash_function() {
+ *         // hashing code here
+ *     }
+ *     
+ *     int main() {
+ *         ticky_stats *stats = ticky_new_stats();
+ *         
+ *         ticky_bench(stats, "Array Sort", sort_array, NULL);
+ *         ticky_bench(stats, "Hash Function", hash_function, NULL);
+ *         
+ *         ticky_plot(stats);  // Prints results and frees memory
+ *         return 0;
+ *     }
+ * 
+ * OUTPUT FORMAT:
+ *     COMPILER: GCC 11.2.0
+ *     OPTIMIZED: true
+ *     
+ *     Array Sort...AVG: 0.0000452100 | ITERS/S: 22115482
+ *     Hash Function...AVG: 0.0000128300 | ITERS/S: 77946127
+ * 
  * NOTES:
- *   - Functions are executed repeatedly for approximately 2.5 seconds
- *   - Results include average time per call and iterations per second
- *   - Memory is automatically freed when calling ticky_plot()
- *   - Thread-safety is not guaranteed
- *
+ *     - Each benchmark runs for approximately 2.5 seconds
+ *     - Average time is measured in seconds per iteration
+ *     - Higher iterations/second indicates better performance
+ *     - Memory is automatically freed when calling ticky_plot()
+ * 
  * LICENSE:
- *    MIT
- *
+ * MIT
  * VERSION: 1.0.0
- * AUTHOR: Wasic 
+ * AUTHOR: Wasix 
  *****************************************************************************/
-
 #ifndef TICKY_H
 #define TICKY_H
 
